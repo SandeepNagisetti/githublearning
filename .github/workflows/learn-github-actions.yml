@@ -1,13 +1,32 @@
-name: learn-github-actions
-run-name: ${{ github.actor }} is learning GitHub Actions
+# name: learn-github-actions
+# run-name: ${{ github.actor }} is learning GitHub Actions
+# on: [push]
+# jobs:
+#   check-bats-version:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
+#       - uses: actions/setup-node@v4
+#         with:
+#           node-version: '20'
+#       - run: npm install -g bats
+#       - run: bats -v
+
+name: Run MATLAB Build Across Different Platforms
 on: [push]
 jobs:
-  check-bats-version:
-    runs-on: ubuntu-latest
+  my-job:
+    name: Run MATLAB Build
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up MATLAB
+        uses: matlab-actions/setup-matlab@v2
+      - name: Run build
+        uses: matlab-actions/run-build@v2
         with:
-          node-version: '20'
-      - run: npm install -g bats
-      - run: bats -v
+          tasks: test
